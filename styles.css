@@ -107,10 +107,9 @@ button, input {
     border-radius: 2px;
     background: linear-gradient(
         to right,
-        var(--bg-progress-fill) 5%,
-        var(--bg-progress-fill) var(--progress, 10%),
-        var(--bg-progress-empty) var(--progress, 20%),
-        var(--bg-progress-empty) var(--progress, 30%),
+        var(--bg-progress-fill) 5px,
+        var(--bg-progress-fill) var(--progress, 50px),
+        var(--bg-progress-empty) var(--progress, 50px),
         var(--bg-progress-empty) 100%
     );
 }
@@ -162,6 +161,4 @@ button, input {
 #play svg {
     width: 85%;
     height: 85%;
-    border-radius: 100%;
-    border-color: #7851a9;
 }

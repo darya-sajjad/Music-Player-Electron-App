@@ -106,9 +106,16 @@ slider.addEventListener('change', () => {
 });
 
 function updateSliderBackground() {
-    const value = slider.value;
-    const adjustedValue = (value == 0) ? 0 : (value == 100) ? 100 : parseFloat(value);
-    slider.style.setProperty('--progress', `${adjustedValue}%`);
+    const min = parseFloat(slider.min) || 0;
+    const max = parseFloat(slider.max) || 100;
+    const val = parseFloat(slider.value);
+    const percent = (val - min) / (max - min);
+
+    const thumbWidth = 18; // must match .star-slider::-webkit-slider-thumb width
+    const trackWidth = slider.offsetWidth;
+    const fillPx = percent * (trackWidth - thumbWidth) + thumbWidth / 2;
+
+    slider.style.setProperty('--progress', `${fillPx}px`);
 }
 
 // Native Event Hookups
