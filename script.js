@@ -5,6 +5,8 @@ const prevBtn = document.getElementById('prev');
 const nextBtn = document.getElementById('next');
 const trackTitle = document.getElementById('title');
 const coverContainer = document.querySelector('.cover');
+const playIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>`;
+const pauseIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
 
 // Initialize the native Audio Core
 const audio = new Audio();
@@ -46,17 +48,15 @@ function togglePlay() {
 
 function playTrack() {
   isPlaying = true;
-  playBtn.textContent = "⏸"; // Switch icon to Pause symbol
-  
+  playBtn.innerHTML = playIcon;
   audio.play().catch(err => {
-    // If you don't have track1.mp3 in assets yet, this keeps your buttons and slider working!
     console.warn("Audio file missing or blocked, running visual simulation mode instead.", err);
   });
 }
 
 function pauseTrack() {
   isPlaying = false;
-  playBtn.textContent = "▶"; // Switch icon to Play symbol
+  playBtn.innerHTML = pauseIcon;
   audio.pause();
 }
 
@@ -105,12 +105,10 @@ slider.addEventListener('change', () => {
   }
 });
 
-// Slider Track Background Gradient Visual Updates
 function updateSliderBackground() {
     const value = slider.value;
     const adjustedValue = (value == 0) ? 0 : (value == 100) ? 100 : parseFloat(value);
-    
-    slider.style.background = `linear-gradient(to right, var(--bg-progress-fill) 0%, var(--bg-progress-fill) ${adjustedValue}%, var(--bg-progress-empty) ${adjustedValue}%, var(--bg-progress-empty) 100%)`;
+    slider.style.setProperty('--progress', `${adjustedValue}%`);
 }
 
 // Native Event Hookups

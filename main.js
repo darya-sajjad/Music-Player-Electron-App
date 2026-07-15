@@ -3,8 +3,8 @@ const path = require('path');
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 244,
-        height: 345,
+        width: 234,
+        height: 335,
         resizable: false,
         maximizable: false,
         fullscreenable: false,
@@ -17,7 +17,7 @@ function createWindow() {
         }
     });
 
-win.loadFile("index.html");
+    win.loadFile(path.join(__dirname, "index.html"));
 }
 
 app.whenReady().then(createWindow);
