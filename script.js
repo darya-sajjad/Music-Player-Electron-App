@@ -9,8 +9,8 @@ const playIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentC
 const pauseIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
 
 let isPlaying = false;
-let isDragging = false; // prevents the poll loop from fighting your finger while dragging the slider
-
+let isDragging = false;
+let ignorePlayStateUntil = 0;
 // ---- Spotify API helpers ----
 async function spotifyFetch(endpoint, options = {}) {
   const token = await window.electronAPI.getAccessToken();
@@ -65,15 +65,26 @@ async function syncUI() {
   slider.value = progressPercent;
   updateSliderBackground();
 
+  if (Date.now() > ignorePlayStateUntil) {
   isPlaying = state.is_playing;
   playBtn.innerHTML = isPlaying ? playIcon : pauseIcon;
 }
+}
 
 function togglePlay() {
-  spotifyFetch(isPlaying ? '/pause' : '/play', { method: 'PUT' })
+  const wasPlaying = isPlaying;
+  isPlaying = !wasPlaying;
+  playBtn.innerHTML = isPlaying ? playIcon : pauseIcon;
+  ignorePlayStateUntil = Date.now() + 2000; // give Spotify 2s to catch up before trusting polls again
+
+  spotifyFetch(wasPlaying ? '/pause' : '/play', { method: 'PUT' })
     .then(async res => {
-      if (!res.ok) console.error('togglePlay failed:', res.status, await res.text());
-      syncUI();
+      if (!res.ok) {
+        console.error('togglePlay failed:', res.status, await res.text());
+        isPlaying = wasPlaying;
+        playBtn.innerHTML = isPlaying ? playIcon : pauseIcon;
+        ignorePlayStateUntil = 0; // request failed, no need to protect a bad guess
+      }
     });
 }
 
