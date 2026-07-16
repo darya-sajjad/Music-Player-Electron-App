@@ -4,6 +4,9 @@ const playBtn = document.getElementById('play');
 const prevBtn = document.getElementById('prev');
 const nextBtn = document.getElementById('next');
 const trackTitle = document.getElementById('title');
+const titleTrack = document.getElementById('titleTrack');
+const titleText = document.getElementById('titleText');
+const titleText2 = document.getElementById('titleText2');
 const coverContainer = document.querySelector('.cover');
 const playIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>`;
 const pauseIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
@@ -11,7 +14,12 @@ const pauseIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="current
 let isPlaying = false;
 let isDragging = false;
 let ignorePlayStateUntil = 0;
-// ---- Spotify API helpers ----
+let lastTitle = '';
+
+document.fonts.ready.then(() => {
+  if (lastTitle) setupTitleMarquee(lastTitle); // re-measure now that Pixeboy is actually loaded
+});
+
 async function spotifyFetch(endpoint, options = {}) {
   const token = await window.electronAPI.getAccessToken();
   const res = await fetch(`https://api.spotify.com/v1/me/player${endpoint}`, {
@@ -48,17 +56,20 @@ async function fetchPlaybackState() {
   return res.json();
 }
 
-// ---- UI sync (replaces loadTrack + timeupdate listener) ----
 async function syncUI() {
   if (isDragging) return;
 
   const state = await fetchPlaybackState();
   if (!state || !state.item) {
-    trackTitle.textContent = "Nothing playing";
+    lastTitle = "Nothing playing";
+    setupTitleMarquee("Nothing playing");
     return;
   }
 
-  trackTitle.textContent = state.item.name;
+  if (state.item.name !== lastTitle) {
+    lastTitle = state.item.name;
+    setupTitleMarquee(state.item.name);
+  }
   coverContainer.style.backgroundImage = `url('${state.item.album.images[0].url}')`;
 
   const progressPercent = (state.progress_ms / state.item.duration_ms) * 100;
@@ -69,6 +80,35 @@ async function syncUI() {
   isPlaying = state.is_playing;
   playBtn.innerHTML = isPlaying ? playIcon : pauseIcon;
 }
+}
+
+function setupTitleMarquee(name) {
+  trackTitle.classList.remove('is-scrolling');
+  titleTrack.classList.remove('marquee');
+  titleTrack.style.animation = 'none';
+  titleTrack.style.transform = 'translateX(0)';
+  titleText.textContent = name;
+  titleText2.textContent = '';
+  titleText2.style.display = 'none';
+
+  requestAnimationFrame(() => {
+    const overflow = titleText.scrollWidth - trackTitle.clientWidth;
+
+    if (overflow > 0) {
+      trackTitle.classList.add('is-scrolling');
+      titleText2.textContent = name;
+      titleText2.style.display = 'inline-block';
+
+      requestAnimationFrame(() => {
+        const singleWidth = titleText.getBoundingClientRect().width;
+        const speed = 25;
+        const duration = singleWidth / speed;
+        titleTrack.style.setProperty('--marquee-duration', `${duration}s`);
+        titleTrack.style.animation = ''; // clear the inline "none" override so the .marquee class can take effect
+        titleTrack.classList.add('marquee');
+      });
+    }
+  });
 }
 
 function togglePlay() {
@@ -104,7 +144,6 @@ function prevTrack() {
     });
 }
 
-// ---- Slider fill (unchanged from before) ----
 function updateSliderBackground() {
     const min = parseFloat(slider.min) || 0;
     const max = parseFloat(slider.max) || 100;
@@ -118,7 +157,6 @@ function updateSliderBackground() {
     slider.style.setProperty('--progress', `${fillPx}px`);
 }
 
-// ---- Event hookups ----
 slider.addEventListener('input', updateSliderBackground);
 slider.addEventListener('mousedown', () => isDragging = true);
 slider.addEventListener('change', async () => {
@@ -134,6 +172,5 @@ playBtn.addEventListener('click', togglePlay);
 nextBtn.addEventListener('click', nextTrack);
 prevBtn.addEventListener('click', prevTrack);
 
-// ---- Poll every second for live playback state ----
 setInterval(syncUI, 1000);
 syncUI();

@@ -117,7 +117,7 @@ function createWindow() {
     console.log('Token file location:', TOKEN_PATH);
     const win = new BrowserWindow({
         width: 234,
-        height: 335,
+        height: 365,
         resizable: false,
         maximizable: false,
         fullscreenable: false,
