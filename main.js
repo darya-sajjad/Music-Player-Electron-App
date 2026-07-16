@@ -118,12 +118,14 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 234,
         height: 365,
-        resizable: false,
+        resizable: true,
         maximizable: false,
         fullscreenable: false,
         frame: false, 
         transparent: true,
         hasShadow: true,
+        skipTaskbar: true,
+        type: 'desktop',
         webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         contextIsolation: true
@@ -131,6 +133,19 @@ function createWindow() {
     });
 
     win.loadFile(path.join(__dirname, "index.html"));
+win.once('ready-to-show', () => {
+    if (process.platform === 'win32') {
+
+      win.setHasShadow(false);
+
+      win.setAlwaysOnTop(false); 
+      
+    } else if (process.platform === 'darwin') {
+      app.dock.hide(); 
+      win.setAlwaysOnTop(false);
+      win.setVisibleOnAllWorkspaces(true);
+    }
+  });
 }
 
 ipcMain.handle('spotify-get-token', async () => {

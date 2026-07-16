@@ -8,5 +8,8 @@
   },
   "devDependencies": {
     "electron": "latest"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1"
   }
 }
