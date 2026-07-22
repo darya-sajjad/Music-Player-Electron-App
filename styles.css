@@ -6,8 +6,8 @@
 }
 
 :root {
-    --bg-progress-empty: #ffd1dc;
-    --bg-progress-fill: #7851a9;  
+    --bg-progress-empty: #FFDDEE;
+    --bg-progress-fill: #FF66B2;  
 }
 
 * {
@@ -36,10 +36,10 @@ body {
     align-items: center;
     gap: 0.5rem;
     width: 14.25rem;  
-    height: 19.5625rem; 
+    height: 20.5625rem; 
     padding: 1.5rem 1rem;
 
-    background-image: url("assets/outer-frame-bg.png");
+    background-image: url("assets/outer-frame-bg-2.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
@@ -53,16 +53,16 @@ button, input {
 .cover {
     position: relative;
     width: 10.5rem;
-    height: 12.1875rem;
-    border-radius: 16px;
-    border: 3px solid #FF8DC6;
+    height: 12.5rem;
+    border-radius: 10px;
     box-sizing: border-box;
+    box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.25);
 
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.062);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.8;
+    opacity: 0.9;
     margin-bottom: 0;
 }
     
@@ -70,17 +70,48 @@ button, input {
     font-family: 'Pixeboy';
     font-size: 1.1rem;
     font-style: normal;
-    font-weight: 400;
-    color: #ffd1dc;
-    white-space: nowrap;
+    font-weight: 300;
+    color: #59447A;
+    width: 100%;
+    max-width: 12.1875rem;
     overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
     margin-top: 4px;
+    display: flex;
+    justify-content: center; 
+}
+
+.songTitle.is-scrolling {
+    justify-content: flex-start; /* long titles start flush-left so the scroll looks right */
+}
+
+.songTitle-track {
+    display: inline-flex;
+    width: max-content;
+    flex-shrink: 0;
+}
+
+@keyframes marquee-loop {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+.songTitle-inner {
+    display: inline-block;
+}
+
+.songTitle-track.marquee {
+    animation: marquee-loop var(--marquee-duration, 10s) linear infinite;
+}
+
+.songTitle-track.marquee .songTitle-inner {
+    padding-right: 20px;
 }
 
 .progress-container {
-    width: 10.1875rem;
-    margin-top: 6px;
+    width: 11.1875rem;
+    margin-top: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,9 +125,8 @@ button, input {
     width: 100%;
     height: 18px;
     background: transparent;
-    border: none;
     box-shadow: none;
-    outline: none;
+    outline:#FF66B2;
     cursor: pointer;
     margin: 0;
     padding: 0;
@@ -120,9 +150,15 @@ button, input {
     width: 18px;
     height: 18px;
     margin-top: -7px;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmOWViZSI+PHBhdGggZD0iTTEyIC41ODdsMy42NjggNy44MzEgOC4yIDEuMTkyLTUuOTM0IDUuNzg3IDEuNCA4LjE2OEwxMiAxOC44OTZsLTcuMzM0IDMuODU3IDEuNC04LjE2OEwuMTMyIDkuMjFsOC4yLTEuMTkyeiIvPjwvc3ZnPg==');
-    background-size: contain;
-    background-repeat: no-repeat;
+    background-color: #59447A; /* <-- change star color here */
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.831 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.21l8.2-1.192z"/></svg>');
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.831 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.21l8.2-1.192z"/></svg>');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
     border: none;
     box-shadow: none;
     cursor: pointer;
@@ -133,7 +169,7 @@ button, input {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 4px;
     margin-top: 2px;
     width: 100%;
 }
@@ -142,7 +178,7 @@ button, input {
     background: none;
     border: none;
     cursor: pointer;
-    color: #FF8DC6; 
+    color: #FF66B2; 
     font-size: 1.9rem;
     transition: transform 0.1s ease;
     line-height: 1;
@@ -159,6 +195,7 @@ button, input {
 }
 
 #play svg {
-    width: 85%;
+    color:#59447A;
+    width: 90%;
     height: 85%;
 }
