@@ -104,7 +104,7 @@ function setupTitleMarquee(name) {
         const speed = 25;
         const duration = singleWidth / speed;
         titleTrack.style.setProperty('--marquee-duration', `${duration}s`);
-        titleTrack.style.animation = ''; // clear the inline "none" override so the .marquee class can take effect
+        titleTrack.style.animation = '';
         titleTrack.classList.add('marquee');
       });
     }
