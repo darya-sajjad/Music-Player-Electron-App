@@ -4,7 +4,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const http = require('http');
 
-const CLIENT_ID = '997254b6783c4cebb15e47e9a1d2bf2e'; // <-- paste your Spotify Client ID
+const CLIENT_ID = '***************';
 const REDIRECT_URI = 'http://127.0.0.1:8888/callback';
 const TOKEN_PATH = path.join(app.getPath('userData'), 'spotify-tokens.json');
 
@@ -89,7 +89,7 @@ async function refreshTokens(refresh_token) {
         })
     });
     const tokens = await res.json();
-    if (!tokens.refresh_token) tokens.refresh_token = refresh_token; // Spotify may omit it on refresh
+    if (!tokens.refresh_token) tokens.refresh_token = refresh_token;
     saveTokens(tokens);
     return tokens;
 }
