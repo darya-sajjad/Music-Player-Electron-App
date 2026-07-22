@@ -83,7 +83,7 @@ button, input {
 }
 
 .songTitle.is-scrolling {
-    justify-content: flex-start; /* long titles start flush-left so the scroll looks right */
+    justify-content: flex-start;
 }
 
 .songTitle-track {
