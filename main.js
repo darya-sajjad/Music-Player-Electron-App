@@ -10,6 +10,14 @@ const TOKEN_PATH = path.join(app.getPath('userData'), 'spotify-tokens.json');
 
 let pendingLogin = null;
 
+if (require('electron-squirrel-startup')) app.quit();
+
+app.setLoginItemSettings({
+  openAtLogin: true,          
+  openAsHidden: false,        
+  path: app.getPath('exe')    
+});
+
 function base64url(buf) {
     return buf.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
