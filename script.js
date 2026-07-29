@@ -1,4 +1,3 @@
-// DOM Element Targets
 const slider = document.getElementById('progress');
 const playBtn = document.getElementById('play');
 const prevBtn = document.getElementById('prev');
@@ -17,7 +16,7 @@ let ignorePlayStateUntil = 0;
 let lastTitle = '';
 
 document.fonts.ready.then(() => {
-  if (lastTitle) setupTitleMarquee(lastTitle); // re-measure now that Pixeboy is actually loaded
+  if (lastTitle) setupTitleMarquee(lastTitle);
 });
 
 async function spotifyFetch(endpoint, options = {}) {
@@ -33,7 +32,7 @@ async function spotifyFetch(endpoint, options = {}) {
   if (res.status === 401) {
     console.warn('Token invalid — clearing and re-authenticating...');
     await window.electronAPI.logout();
-    const freshToken = await window.electronAPI.getAccessToken(); // triggers fresh login
+    const freshToken = await window.electronAPI.getAccessToken();
     return fetch(`https://api.spotify.com/v1/me/player${endpoint}`, {
       ...options,
       headers: {
@@ -115,7 +114,7 @@ function togglePlay() {
   const wasPlaying = isPlaying;
   isPlaying = !wasPlaying;
   playBtn.innerHTML = isPlaying ? playIcon : pauseIcon;
-  ignorePlayStateUntil = Date.now() + 2000; // give Spotify 2s to catch up before trusting polls again
+  ignorePlayStateUntil = Date.now() + 2000;
 
   spotifyFetch(wasPlaying ? '/pause' : '/play', { method: 'PUT' })
     .then(async res => {
@@ -123,7 +122,7 @@ function togglePlay() {
         console.error('togglePlay failed:', res.status, await res.text());
         isPlaying = wasPlaying;
         playBtn.innerHTML = isPlaying ? playIcon : pauseIcon;
-        ignorePlayStateUntil = 0; // request failed, no need to protect a bad guess
+        ignorePlayStateUntil = 0; 
       }
     });
 }
